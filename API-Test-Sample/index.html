@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Api(s) test</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="bootstrap.min.css">
+        <style>
+            .console{overflow-y: scroll;height:400px;}
+            .pdtp{padding-top:10px;}
+            .lineBm{border-bottom:1px solid lightgrey;padding-bottom:10px;}
+            #chat dd{
+                padding-bottom: 2px;
+            }
+            .alert-error{
+                border-color: lightcoral;
+                color: red;
+            }
+            .clear{
+                background-color: gainsboro; border-color: grey;color: black;float: right;
+            }
+        </style>
+        <script src="jquery-1.10.2.min.js"></script>
+        <script src="bootstrap.min.js"></script>
+        <script src="appwarp.min.js"></script>
+        <script src="callback.js"></script>
+        <script type="text/javascript">
+            var apiKey = "";
+            var secreteKey = "";
+			
+            var _warpclient;
+            var nameId = "";
+            var roomsText = "";
+            var inRoom = false;
+            var roomId = "";
+                        
+         			
+            $(document).ready(function(){
+                $("#roomsRow").hide();
+                $("#nameBtn").click(function(){
+                    
+                    if($("#nameText").val() != "")
+                    {
+                        nameId = $("#nameText").val();
+                        $("#nameRow").hide();
+                        $("#roomsRow").show();
+									
+                        $("#Info").html("Connecting...");
+                        AppWarp.WarpClient.initialize(apiKey, secreteKey);
+                        _warpclient = AppWarp.WarpClient.getInstance();
+                        
+                        _warpclient.setResponseListener(AppWarp.Events.onConnectDone, onConnectDone);
+                        _warpclient.setResponseListener(AppWarp.Events.onDisconnectDone, onDisconnectDone);
+                        _warpclient.setResponseListener(AppWarp.Events.onUserStatusDone, onUserStatusDone);
+                        _warpclient.setResponseListener(AppWarp.Events.onGetOnlineUsersDone, onGetOnlineUsersDone);
+                        _warpclient.setResponseListener(AppWarp.Events.onGetLiveUserInfoDone, onGetLiveUserInfoDone);
+                        _warpclient.setResponseListener(AppWarp.Events.onGetLiveRoomInfoDone, onGetLiveRoomInfoDone);
+                        _warpclient.setResponseListener(AppWarp.Events.onGetLiveLobbyInfoDone, onGetLiveLobbyInfoDone);
+                        _warpclient.setResponseListener(AppWarp.Events.onCreateRoomDone, onCreateRoomDone);
+                        _warpclient.setResponseListener(AppWarp.Events.onJoinRoomDone, onJoinRoomDone);
+                        _warpclient.setResponseListener(AppWarp.Events.onJoinAndSubscribeRoomDone, onJoinAndSubscribeRoomDone);
+                        _warpclient.setResponseListener(AppWarp.Events.onSubscribeRoomDone, onSubscribeRoomDone);
+                        _warpclient.setResponseListener(AppWarp.Events.onUnsubscribeRoomDone, onUnsubscribeRoomDone);
+                        _warpclient.setResponseListener(AppWarp.Events.onLeaveRoomDone, onLeaveRoomDone);
+                        _warpclient.setResponseListener(AppWarp.Events.onleaveAndUnsubscribeRoomDone, onleaveAndUnsubscribeRoomDone);
+                        _warpclient.setResponseListener(AppWarp.Events.onDeleteRoomDone, onDeleteRoomDone);
+                        _warpclient.setResponseListener(AppWarp.Events.onUpdatePropertyDone, onUpdatePropertyDone);
+                        _warpclient.setResponseListener(AppWarp.Events.onLockPropertiesDone, onLockPropertiesDone);
+                        _warpclient.setResponseListener(AppWarp.Events.onLockPropertiesDone, onLockPropertiesDone);
+                        _warpclient.setResponseListener(AppWarp.Events.onUserChangeRoomProperty, onUserChangeRoomProperty);
+                        _warpclient.setResponseListener(AppWarp.Events.onUnlockPropertiesDone, onUnlockPropertiesDone);
+                        _warpclient.setResponseListener(AppWarp.Events.onGetAllRoomsDone, onGetAllRoomsDone);
+                        _warpclient.setResponseListener(AppWarp.Events.onGetMatchedRoomsDone, onGetMatchedRoomsDone);
+                        _warpclient.setResponseListener(AppWarp.Events.onSetCustomUserDataDone, onSetCustomUserDataDone);
+                        _warpclient.setResponseListener(AppWarp.Events.onSetCustomRoomDataDone, onSetCustomRoomDataDone);
+                        _warpclient.setResponseListener(AppWarp.Events.onJoinLobbyDone, onJoinLobbyDone);
+                        _warpclient.setResponseListener(AppWarp.Events.onLeaveLobbyDone, onLeaveLobbyDone);
+                        _warpclient.setResponseListener(AppWarp.Events.onSubscribeLobbyDone, onSubscribeLobbyDone);
+                        _warpclient.setResponseListener(AppWarp.Events.onUnsubscribeLobbyDone, onUnsubscribeLobbyDone);
+                        _warpclient.setResponseListener(AppWarp.Events.onSendChatDone , onSendChatDone );
+                        _warpclient.setResponseListener(AppWarp.Events.onSendPrivateChatDone , onSendPrivateChatDone );
+                        _warpclient.setNotifyListener(AppWarp.Events.onUpdatePeersReceived , onUpdatePeersReceived );
+                        _warpclient.setResponseListener(AppWarp.Events.onSendUpdateDone , onSendUpdateDone );
+                        _warpclient.setResponseListener(AppWarp.Events.onSendPrivateUpdateDone , onSendPrivateUpdateDone);
+                        _warpclient.setNotifyListener(AppWarp.Events.onPrivateUpdateReceived  , onPrivateUpdateReceived);
+                        _warpclient.setResponseListener(AppWarp.Events.onStartGameDone  , onStartGameDone);
+                        _warpclient.setResponseListener(AppWarp.Events.onSendMoveDone  , onSendMoveDone);
+                        _warpclient.setResponseListener(AppWarp.Events.onGetMoveHistoryDone  , onGetMoveHistoryDone);
+                        _warpclient.setResponseListener(AppWarp.Events.onStopGameDone  , onStopGameDone);
+                        _warpclient.setNotifyListener(AppWarp.Events.onRoomDestroyed, onRoomDestroyed);
+                        _warpclient.setNotifyListener(AppWarp.Events.onUserLeftRoom, onUserLeftRoom);
+                        _warpclient.setNotifyListener(AppWarp.Events.onUserJoinedRoom , onUserJoinedRoom );
+                        _warpclient.setNotifyListener(AppWarp.Events.onUserLeftLobby , onUserLeftLobby );
+                        _warpclient.setNotifyListener(AppWarp.Events.onUserJoinedLobby , onUserJoinedLobby );
+                        _warpclient.setNotifyListener(AppWarp.Events.onSendUpdateDone , onSendUpdateDone );
+                        _warpclient.setNotifyListener(AppWarp.Events.onRoomCreated , onRoomCreated);
+                        _warpclient.setNotifyListener(AppWarp.Events.onChatReceived  , onChatReceived);
+                        _warpclient.setNotifyListener(AppWarp.Events.onMoveCompleted  , onMoveCompleted);
+                        _warpclient.setNotifyListener(AppWarp.Events.onUserResumed  , onUserResumed);
+                        _warpclient.setNotifyListener(AppWarp.Events.onUserPaused  , onUserPaused);
+                        _warpclient.setNotifyListener(AppWarp.Events.onGameStarted  , onGameStarted);
+                        _warpclient.setNotifyListener(AppWarp.Events.onGameStopped  , onGameStopped);
+                        _warpclient.setNotifyListener(AppWarp.Events.onNextTurnRequested  , onNextTurnRequested);
+                        _warpclient.setNotifyListener(AppWarp.Events.onPrivateChatReceived  , onPrivateChatReceived);
+
+                    
+                        
+                        _warpclient.connect(nameId);
+
+                        
+                        
+                       
+                    }
+                });
+				
+                $("#chatBtn").click(function(){
+                    if(inRoom == true)
+                    {
+                        if($("#chatText").val() != "")
+                        {
+                            _warpclient.sendChat($("#chatText").val());
+                            $("#chatText").val("");
+                        }
+                    }
+                });
+                $("#discoonectBtn").click(function(){
+                    _warpclient.disconnect();
+                      
+                    
+                });
+                $("#userStatusBtn").click(function(){
+                    var user = prompt("Please enter username", "");
+                    if(user ==  null){
+                        return;
+                    }
+                    else if (user != "") {
+                        _warpclient.getUserStatus(user);
+                    }
+                    else
+                    {
+                        $("#Error").html("Please enter all details")
+                    }
+                    
+                });
+               
+                $("#getOnlineUsersBtn").click(function(){
+                    _warpclient.getOnlineUsers();
+
+                });	
+              
+                $("#getLiveUserBtn").click(function(){
+                    _warpclient.getLiveUserInfo(nameId);
+                });		
+                $("#getLiveRoomBtn").click(function(){
+                    var roomID = prompt("Please enter room ID", "");
+                    if(roomID ==  null){
+                        return;
+                    }
+                    else if (roomID != "") {
+                        _warpclient.getLiveRoomInfo(roomID);
+                    }
+                    else
+                    {
+                        $("#Error").html("Please enter all details")
+                    }
+                })
+                $("#getLiveLoobyBtn").click(function(){
+                    _warpclient.getLiveLobbyInfo();
+                });
+                $("#onCreateRoomBtn").click(function(){
+                    var roomname = prompt("Please enter room name", "");
+                    var maxuser = prompt("Please enter max user", "");
+                    if(roomname ==  null || maxuser== null){
+                        return;
+                    }
+                    else if (roomname != "" && maxuser!="") {
+                        _warpclient.createRoom(roomname,roomname,maxuser,null);
+                    }
+                    else
+                    {
+                        $("#Error").html("Please enter all details")
+                    }
+                })
+                $("#onCreateRoomWithPropBtn").click(function(){
+                    var roomname = prompt("Please enter room name", "");
+                    var maxuser = prompt("Please enter max user", "");
+                    
+                    if(roomname ==  null || maxuser== null){
+                        return;
+                    }
+                    else if (roomname != "" && maxuser!="") {
+                        var obj = {'a': 'b'}
+                        _warpclient.createRoom(roomname,roomname,maxuser,obj);
+                    }
+                    else
+                    {
+                        $("#Error").html("Please enter all details")
+                    }
+                })
+                
+                
+                $("#createTurnRoomBtn").click(function(){
+                    var roomname = prompt("Please enter room name", "");
+                    var maxuser = prompt("Please enter max user", "");
+                    var time = prompt("please enter  time ( in  seconds )  allowed for  a  user  to  complete  its  turn", "");
+                    if(roomname ==  null || maxuser== null ){
+                        return;
+                    }
+                    else if (roomname != "" && maxuser!="" && time!="") {
+                        _warpclient.createTurnRoom(roomname,roomname,maxuser,null,time);
+                    }
+                    else
+                    {
+                        $("#Error").html("Please enter all details")
+                    }
+                })
+                
+                
+                $("#joinRoomBtn").click(function(){
+                    var roomid = prompt("Please enter Room ID", "");
+                    if(roomid ==  null ){
+                        return;
+                    }
+                    else if(roomid!=""){
+                        _warpclient.joinRoom(roomid);
+                    }
+                    else
+                    {
+                        $("#Error").html("Please enter all details")
+                    }
+                });
+                
+                $("#joinRoominRangeBtn").click(function(){
+                    var umin = prompt("Please enter min user", "");
+                    var umax = prompt("Please enter max user", "");
+                    if(umin ==  null || umax == null){
+                        return;
+                    }
+                    else if(umin!="" && umax!=""){
+                        _warpclient.joinRoomInRange(umin,umax,true);
+                    }
+                    else
+                    {
+                        $("#Error").html("Please enter all details")
+                    }
+                });
+           
+                
+                $("#joinAndSubStatusBtn").click(function(){
+                    var roomid = prompt("Please enter Room ID", "");
+                    if(roomid ==  null ){
+                        return;
+                    }
+                    else if(roomid!=""){
+                        _warpclient.JoinAndSubcribeRoom(roomid);
+                    }
+                    else
+                    {
+                        $("#Error").html("Please enter all details")
+                    }
+                });
+                
+                
+                $("#leaveAndUnsubStatusBtn").click(function(){
+                    var roomid = prompt("Please enter Room ID", "");
+                    if(roomid ==  null ){
+                        return;
+                    }
+                    else if(roomid!=""){
+                        _warpclient.LeaveAndUnsucribeRoom(roomid);
+                    }
+                    else
+                    {
+                        $("#Error").html("Please enter all details")
+                    }
+                });
+                
+                $("#subRoomBtn").click(function(){
+                    var roomid = prompt("Please enter Room ID", "");
+                    if(roomid ==  null ){
+                        return;
+                    }
+                    else if(roomid!=""){
+                        _warpclient.subscribeRoom(roomid);
+                    }
+                    else
+                    {
+                        $("#Error").html("Please enter all details")
+                    }
+                });
+                $("#unsubRoomBtn").click(function(){
+                    var roomid = prompt("Please enter Room ID", "");
+                    if(roomid ==  null ){
+                        return;
+                    }
+                    else if(roomid!=""){
+                        _warpclient.unsubscribeRoom(roomid);
+                    }
+                    else
+                    {
+                        $("#Error").html("Please enter all details")
+                    }
+                });
+                
+                $("#joinRoomWithPropBtn").click(function(){
+                    var propname = prompt("Please enter property name", "","");
+                    var propval = prompt("Please enter property value", "","");
+                    if(propname ==  null || propval==null){
+                        return;
+                    }
+                    else if(propname!="" && propval!=""){
+                        var obj = {"propname" : propval}
+                        var obj = {};
+                        obj[propname] = propval;
+                        _warpclient.joinRoomWithProperties(obj);
+                    }
+                    else
+                    {
+                        $("#Error").html("Please enter all details")
+                    }
+                });
+                
+                $("#leaveRoomBtn").click(function(){
+                    var roomid = prompt("Please enter Room ID", "");
+                    if(roomid ==  null){
+                        return;
+                    }
+                    else if(roomid!=""){
+                        _warpclient.leaveRoom(roomid);
+                    }
+                    else
+                    {
+                        $("#Error").html("Please enter all details")
+                    }
+                });
+                
+                
+                $("#deletRoomBtn").click(function(){
+                    var roomid = prompt("Please enter Room ID", "");
+                    if(roomid ==  null){
+                        return;
+                    }
+                    else if(roomid!=""){
+                        _warpclient.deleteRoom(roomid);
+                    }
+                    else
+                    {
+                        $("#Error").html("Please enter all details")
+                    }
+                   
+                });
+                
+                
+                $("#updateRoomPropBtn").click(function(){
+                    var roomID = prompt("Please enter Room Id", "","");
+                    var propname = prompt("Please enter property name", "");
+                    var propval = prompt("Please enter property value", "");
+                    var rpropKey = prompt("Please enter property key which you want to remove", "");
+                    if(roomID ==  null || propname== null || propval == null){
+                        return;
+                    }
+                    else if(roomID!="" && propname!="" && propval!=""){
+                        var obj = {};
+                        obj[propname] = propval;
+                        _warpclient.updateRoomProperties(roomID,obj,rpropKey);
+                    }
+                    else
+                    {
+                        $("#Error").html("Please enter all details")
+                    }
+                });
+                
+                
+                $("#LockPropBtn").click(function(){
+                    var propname = prompt("Please enter property name", "");
+                    var propval = prompt("Please enter property value", "");
+                    if(propname ==  null || propval== null){
+                        return;
+                    }
+                    else if(propname!="" && propval!=""){
+                        var obj = {};
+                        obj[propname] = propval;
+                        _warpclient.lockProperties(obj);
+                    }
+                    else
+                    {
+                        $("#Error").html("Please enter all details")
+                    }
+                });
+                
+                
+                $("#UnlockPropBtn").click(function(){
+                    var key = prompt("Please enter property key which you want to unlock", "");
+                    if(key ==  null){
+                        return;
+                    }
+                    else if(key!=""){
+                        _warpclient.unlockProperties(key);
+                    }
+                    else
+                    {
+                        $("#Error").html("Please enter all details")
+                    }
+                   
+                });
+                
+                $("#getAllRoomBtn").click(function(){
+                    _warpclient.getAllRooms();
+                });
+                
+                $("#getRoomWithPropBtn").click(function(){
+                    var propname = prompt("Please enter property name", "");
+                    var propval = prompt("Please enter property value", "");
+                    if(propname ==  null || propval== null){
+                        return;
+                    }
+                    else if(propname!="" && propval!=""){
+                        var obj = {};
+                        obj[propname] = propval;
+                        _warpclient.getRoomsWithProperties(obj);
+                    }
+                    else
+                    {
+                        $("#Error").html("Please enter all details")
+                    }
+                });
+                
+             
+                $("#getRoominRangeBtn").click(function(){
+                    var umin = prompt("Please enter min user", "");
+                    var umax = prompt("Please enter max user", "");
+                    if(umin ==  null || umax== null){
+                        return;
+                    }
+                    else if(umin!="" && umax!=""){
+                        _warpclient.getRoomsInRange(umin,umax);
+                    }
+                    else
+                    {
+                        $("#Error").html("Please enter all details")
+                    }
+                });
+                
+                $("#getRoominRangeWithPropBtn").click(function(){
+                    var umin = prompt("Please enter min user", "");
+                    var umax = prompt("Please enter max user", "");
+                    var pkey = prompt("Please enter property key", "");
+                    var pval = prompt("Please enter property value", "");
+                    if(umin ==  null || umax== null || pkey == null || pval == null){
+                        return;
+                    }
+                    else if(umin!="" && umax!="" && pkey!="" && pval!=""){
+                        var obj = {};
+                        obj[pkey] = pval;
+                        _warpclient.GetRoomInRangeWithProp(umin,umax,obj);
+                    }
+                    else
+                    {
+                        $("#Error").html("Please enter all details")
+                    }
+                });
+                
+                $("#setCustumRoomBtn").click(function(){
+                    var roomId = prompt("Please enter room id", "");
+                    var propname = prompt("Please enter property key", "");
+                    var propval = prompt("Please enter property value", "");
+                    if(roomId ==  null || propname== null || propval == null){
+                        return;
+                    }
+                    else if(roomId!="" && propname!="" && propval!=""){
+                        var obj = {};
+                        obj[propname] = propval;
+                        _warpclient.setCustomRoomData(roomId,obj);
+                    }
+                    else
+                    {
+                        $("#Error").html("Please enter all details")
+                    }
+                });
+                
+                $("#setCustumUserBtn").click(function(){
+                    var customData = prompt("Please enter data", "");
+                    if(customData ==  null ){
+                        return;
+                    }
+                    else if(customData!="" ){
+                        _warpclient.setCustomUserData(nameId,customData);       
+                    }
+                    else
+                    {
+                        $("#Error").html("Please enter all details")
+                    }
+                });
+                
+                $("#joinLobbyBtn").click(function(){
+                    _warpclient.joinLobby();       
+                });
+                $("#leaveLobbyBtn").click(function(){
+                    _warpclient.leaveLobby();       
+                });
+                $("#subLobbyBtn").click(function(){
+                    _warpclient.subscribeLobby();       
+                });
+                $("#unsubLobbyBtn").click(function(){
+                    _warpclient.unsubscribeLobby();       
+                });
+                
+                $("#sendChatBtn").click(function(){
+                    var chat = prompt("Please enter data", "");
+                    if(chat ==  null ){
+                        return;
+                    }
+                    else if(chat!=""){
+                        _warpclient.sendChat(chat);       
+                    }
+                    else
+                    {
+                        $("#Error").html("Please enter all details")
+                    }
+                });
+                
+                
+                    
+                $("#sendPrivateChatBtn").click(function(){
+                    var user = prompt("Please enter username", "");
+                    var chat = prompt("Please enter data", "");
+                    if(user ==  null || chat == null){
+                        return;
+                    }
+                    else if(user!="" && chat!=""){
+                        _warpclient.sendPrivateChat(user,chat);       
+                    }
+                    else
+                    {
+                        $("#Error").html("Please enter all details")
+                    }
+                });
+                
+                
+                $("#sendUpdatePeerBtn").click(function(){
+                    var chat = prompt("Please enter data", "");
+                    if(chat ==  null){
+                        return;
+                    }
+                    else if( chat!=""){
+                        var bytes = [];
+                        for (var i = 0; i < chat.length; ++i) {
+                            bytes.push(chat.charCodeAt(i));
+                        }
+                        _warpclient.sendUpdatePeers(bytes);       
+                    }
+                    else
+                    {
+                        $("#Error").html("Please enter all details")
+                    }
+                });
+                
+                $("#sendPrivateUpdateBtn").click(function(){
+                    var user = prompt("Please enter username", "");
+                    var chat = prompt("Please enter data", "");
+                    if(user ==  null || chat== null){
+                        return;
+                    }
+                    else if(user!="" && chat!=""){
+                        var bytes = [];
+                        for (var i = 0; i < chat.length; ++i) {
+                            bytes.push(chat.charCodeAt(i));
+                        }
+                        _warpclient.sendPrivateUpdatePeers(user,bytes);       
+                    }
+                    else
+                    {
+                        $("#Error").html("Please enter all details")
+                    }
+                });
+                
+                
+                $("#startGameBtn").click(function(){
+                    _warpclient.startGame();     
+                });
+                
+                $("#sendMoveBtn").click(function(){
+                    var chat = prompt("Please enter data", "");
+                    if(chat ==  null){
+                        return;
+                    }
+                    else if(chat!=""){
+                        _warpclient.sendMove(chat);     
+                    }
+                    else
+                    {
+                        $("#Error").html("Please enter all details")
+                    }
+                });
+                
+                $("#getMoveHistoryBtn").click(function(){
+                    _warpclient.getMoveHistory();     
+                });
+                
+                $("#stopGameBtn").click(function(){
+                    _warpclient.stopGame();     
+                });
+                
+                $("#clearBtn").click(function(){
+                    $("#Info").html("");
+                });
+                
+                
+            });
+        </script>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row" id="nameRow">
+                <div class="col-md-4 col-md-offset-4 text-center">
+                    <h1>AppWarp JS Demo</h1>
+                    <div class="well">
+                        <form role="form">
+                            <div class="form-group">
+                                <label for="nameText">Your Name</label>
+                                <input type="text" class="form-control" id="nameText" placeholder="Enter Your Name"><br/>
+                                <button id="nameBtn" type="button" class="btn btn-primary">Continue</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="roomsRow">
+                <div class="col-md-4 well" >
+
+                    <div class="row">
+                        <h4>Error</h4>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-md-11 alert alert-error" id="Error">
+                                        No Error
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <button id="clearBtn" type="button" class="btn clear">Clear</button>
+
+                    </div>
+                    <div class="row">
+                        <h4>Console</h4>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-md-11 alert alert-info console" id="Info">
+                                        No Info
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8 well">
+                    <div class="row lineBm">
+                        <div class="col-md-2" >  <button id="discoonectBtn" type="button" class="btn btn-primary">Disconnect</button></div>
+                        <div class="col-md-2" ><button id="userStatusBtn" type="button" class="btn btn-primary">Online status</button></div>
+                        <div class="col-md-3" ><button id="getOnlineUsersBtn" type="button" class="btn btn-primary">Get Online Users</button></div>
+                    </div>
+                    <div class="row pdtp lineBm">
+                        <div class="col-md-3" ><button id="getLiveUserBtn" type="button" class="btn btn-primary">Get Live User Info</button></div>
+                        <div class="col-md-3" ><button id="getLiveRoomBtn" type="button" class="btn btn-primary">Get Live Room Info</button></div>
+                        <div class="col-md-2" ><button id="getLiveLoobyBtn" type="button" class="btn btn-primary"> Get Live Lobby Info</button> </div>
+
+                    </div>
+                    <div class="row pdtp lineBm"> 
+                        <div class="col-md-2" >  <button id="onCreateRoomBtn" type="button" class="btn btn-primary">Create room</button></div>
+                        <div class="col-md-3" ><button id="createTurnRoomBtn" type="button" class="btn btn-primary">Create Turn Room</button> </div>
+                        <div class="col-md-2" >  <button id="onCreateRoomWithPropBtn" type="button" class="btn btn-primary">Create room with Properties</button></div>
+
+                    </div>
+
+                    <div class="row pdtp "> 
+                        <div class="col-md-2" > <button id="joinRoomBtn" type="button" class="btn btn-primary">Join Room</button></div>
+                        <div class="col-md-3" > <button id="joinRoominRangeBtn" type="button" class="btn btn-primary">Join Room in Range</button></div>
+                        <div class="col-md-3" ><button id="joinAndSubStatusBtn" type="button" class="btn btn-primary">Join and subcribe room </button> </div> 
+                        <div class="col-md-2" ><button id="subRoomBtn" type="button" class="btn btn-primary">Subscribe Room</button> </div>
+
+                    </div>
+                    <div class="row pdtp "> 
+                        <div class="col-md-3" ><button id="unsubRoomBtn" type="button" class="btn btn-primary">Unsubscribe Room</button> </div>
+                        <div class="col-md-4" > <button id="joinRoomWithPropBtn" type="button" class="btn btn-primary">Join room With Properties</button></div>
+                        <div class="col-md-2" > <button id="leaveRoomBtn" type="button" class="btn btn-primary">Leave Room</button> </div>
+
+                    </div>
+                    <div class="row pdtp lineBm"> 
+                        <div class="col-md-4" ><button id="leaveAndUnsubStatusBtn" type="button" class="btn btn-primary">Leave and unsubcribe room</button></div>
+                        <div class="col-md-2" ><button id="deletRoomBtn" type="button" class="btn btn-primary">Delete Room</button></div>
+
+                    </div>
+                    <div class="row pdtp lineBm"> 
+                        <div class="col-md-4" ><button id="updateRoomPropBtn" type="button" class="btn btn-primary">Update Room Properties</button></div>
+                        <div class="col-md-3" ><button id="LockPropBtn" type="button" class="btn btn-primary">Lock Properties</button></div>
+                        <div class="col-md-3" ><button id="UnlockPropBtn" type="button" class="btn btn-primary">Unlock Properties</button></div>
+
+                    </div>
+                    <div class="row pdtp"> 
+                        <div class="col-md-3" > <button id="getAllRoomBtn" type="button" class="btn btn-primary">Get All Rooms</button></div>
+                        <div class="col-md-4" > <button id="getRoomWithPropBtn" type="button" class="btn btn-primary">Get Room With Properties</button></div>
+                        <div class="col-md-3" ><button id="getRoominRangeBtn" type="button" class="btn btn-primary">Get Room in Range</button> </div>                        
+
+                    </div>
+                    <div class="row pdtp lineBm"> 
+                        <div class="col-md-5" > <button id="getRoominRangeWithPropBtn" type="button" class="btn btn-primary">Get Room In Range With Properties</button></div>
+
+                    </div>
+                    <div class="row pdtp lineBm">
+                        <div class="col-md-3" ><button id="setCustumRoomBtn" type="button" class="btn btn-primary">Set Custom Room Data</button></div>
+                        <div class="col-md-3" ><button id="setCustumUserBtn" type="button" class="btn btn-primary">Set Custom User Data</button></div>
+
+                    </div>
+                    <div class="row pdtp lineBm" > 
+
+                        <div class="col-md-2" ><button id="joinLobbyBtn" type="button" class="btn btn-primary">Join Lobby</button> </div>
+                        <div class="col-md-3" ><button id="leaveLobbyBtn" type="button" class="btn btn-primary">Leave Lobby</button>  </div>
+                        <div class="col-md-3" > <button id="subLobbyBtn" type="button" class="btn btn-primary">Subcribe Lobby</button> </div>
+                        <div class="col-md-2" > <button id="unsubLobbyBtn" type="button" class="btn btn-primary">Unsubcribe Lobby</button></div>
+
+                    </div>
+                    <div class="row pdtp lineBm"> 
+                        <div class="col-md-2"><button id="sendChatBtn" type="button" class="btn btn-primary">Send Chat</button></div>
+                        <div class="col-md-3"><button id="sendPrivateChatBtn" type="button" class="btn btn-primary">Send Private Chat</button></div>
+                        <div class="col-md-3"><button id="sendUpdatePeerBtn" type="button" class="btn btn-primary">Send Update Peers</button></div>
+                        <div class="col-md-3"><button id="sendPrivateUpdateBtn" type="button" class="btn btn-primary">Send Private Update Peers</button></div>
+
+                    </div>
+                    <div class="row pdtp lineBm"> 
+                        <div class="col-md-2"><button id="startGameBtn" type="button" class="btn btn-primary">Start Game</button></div>
+                        <div class="col-md-2"><button id="sendMoveBtn" type="button" class="btn btn-primary">Send Move</button></div>
+                        <div class="col-md-3"><button id="getMoveHistoryBtn" type="button" class="btn btn-primary">Get Move History</button></div>
+                        <div class="col-md-2"><button id="stopGameBtn" type="button" class="btn btn-primary">Stop Game</button></div>
+                    </div>
+
+
+                </div>
+
+            </div>
+        </div>
+
+    </body>
+</html>

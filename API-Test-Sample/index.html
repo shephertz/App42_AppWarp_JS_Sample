@@ -24,8 +24,8 @@
         <script src="appwarp.min.js"></script>
         <script src="callback.js"></script>
         <script type="text/javascript">
-            var apiKey = "";
-            var secreteKey = "";
+            var apiKey = "e8dce1c99bdcb8c7a240cf0fa7cef68d148fcedc24547429a4d94ee6117a0059";
+            var secreteKey = "d270f9466af5529831c8b1ac1c7ff328a2cd026573d885a399b0eacddac9eb8a";
 			
             var _warpclient;
             var nameId = "";
@@ -254,7 +254,7 @@
                         return;
                     }
                     else if(roomid!=""){
-                        _warpclient.JoinAndSubcribeRoom(roomid);
+                        _warpclient.joinAndSubcribeRoom(roomid);
                     }
                     else
                     {
@@ -269,7 +269,7 @@
                         return;
                     }
                     else if(roomid!=""){
-                        _warpclient.LeaveAndUnsucribeRoom(roomid);
+                        _warpclient.leaveAndUnsucribeRoom(roomid);
                     }
                     else
                     {
@@ -454,7 +454,7 @@
                     else if(umin!="" && umax!="" && pkey!="" && pval!=""){
                         var obj = {};
                         obj[pkey] = pval;
-                        _warpclient.GetRoomInRangeWithProp(umin,umax,obj);
+                        _warpclient.getRoomInRangeWithProp(umin,umax,obj);
                     }
                     else
                     {

@@ -249,8 +249,8 @@ function onJoinAndSubscribeRoomDone(room){
     objDiv.scrollTop = objDiv.scrollHeight;
 }
 
-function onleaveAndUnsubscribeRoomDone(room){
-    $("#Info").append("<br>onleaveAndUnsubscribeRoomDone : " + room.res);
+function onLeaveAndUnsubscribeRoomDone(room){
+    $("#Info").append("<br>onLeaveAndUnsubscribeRoomDone : " + room.res);
     if(room.json){
         $("#Info").append("</br> info:<br>")
         if(room.json.id){
@@ -849,4 +849,16 @@ function onNextTurnRequested(lastTurn)
 {
     $("#Info").append("lastTurn : "+lastTurn);
 
+}
+
+function onGetAllRoomsCountDone(result,count)
+{
+    $("#Info").append("</br>onGetAllRoomsCountDone : "+result);
+    $("#Info").append("</br>Count   : "+count);
+}
+
+function onGetOnlineUsersCountDone(result,count)
+{
+    $("#Info").append("</br>onGetOnlineUsersCountDone : "+result);
+    $("#Info").append("</br>Count   : "+count);
 }

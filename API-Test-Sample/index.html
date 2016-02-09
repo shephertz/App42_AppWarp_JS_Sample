@@ -61,7 +61,7 @@
                         _warpclient.setResponseListener(AppWarp.Events.onSubscribeRoomDone, onSubscribeRoomDone);
                         _warpclient.setResponseListener(AppWarp.Events.onUnsubscribeRoomDone, onUnsubscribeRoomDone);
                         _warpclient.setResponseListener(AppWarp.Events.onLeaveRoomDone, onLeaveRoomDone);
-                        _warpclient.setResponseListener(AppWarp.Events.onleaveAndUnsubscribeRoomDone, onleaveAndUnsubscribeRoomDone);
+                        _warpclient.setResponseListener(AppWarp.Events.onLeaveAndUnsubscribeRoomDone , onLeaveAndUnsubscribeRoomDone);
                         _warpclient.setResponseListener(AppWarp.Events.onDeleteRoomDone, onDeleteRoomDone);
                         _warpclient.setResponseListener(AppWarp.Events.onUpdatePropertyDone, onUpdatePropertyDone);
                         _warpclient.setResponseListener(AppWarp.Events.onLockPropertiesDone, onLockPropertiesDone);
@@ -101,6 +101,9 @@
                         _warpclient.setNotifyListener(AppWarp.Events.onGameStopped  , onGameStopped);
                         _warpclient.setNotifyListener(AppWarp.Events.onNextTurnRequested  , onNextTurnRequested);
                         _warpclient.setNotifyListener(AppWarp.Events.onPrivateChatReceived  , onPrivateChatReceived);
+                        _warpclient.setResponseListener(AppWarp.Events.onGetAllRoomsCountDone  , onGetAllRoomsCountDone);
+                        _warpclient.setResponseListener(AppWarp.Events.onGetOnlineUsersCountDone  , onGetOnlineUsersCountDone);
+
 
                     
                         
@@ -603,6 +606,12 @@
                 $("#clearBtn").click(function(){
                     $("#Info").html("");
                 });
+                 $("#getUsersCountBtn").click(function(){
+                    _warpclient.getOnlineUsersCount();     
+                });
+                 $("#getRoomsCountBtn").click(function(){
+                    _warpclient.getAllRoomsCount();     
+                });
                 
                 
             });
@@ -661,6 +670,9 @@
                         <div class="col-md-2" >  <button id="discoonectBtn" type="button" class="btn btn-primary">Disconnect</button></div>
                         <div class="col-md-2" ><button id="userStatusBtn" type="button" class="btn btn-primary">Online status</button></div>
                         <div class="col-md-3" ><button id="getOnlineUsersBtn" type="button" class="btn btn-primary">Get Online Users</button></div>
+                        <div class="col-md-2" ><button id="getUsersCountBtn" type="button" class="btn btn-primary">Users Count</button></div>
+                        <div class="col-md-2" ><button id="getRoomsCountBtn" type="button" class="btn btn-primary">Rooms Count</button></div>
+
                     </div>
                     <div class="row pdtp lineBm">
                         <div class="col-md-3" ><button id="getLiveUserBtn" type="button" class="btn btn-primary">Get Live User Info</button></div>
